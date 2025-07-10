@@ -1,16 +1,50 @@
-# weather_app
+# Weather App
 
-A new Flutter project.
+A clean architecture weather application with Firebase backend.
 
-## Getting Started
+## Key Features
 
-This project is a starting point for a Flutter application.
+- **Clean Architecture**  
+  - Easy maintenance  
+  - Better testability  
+  - Clear separation of concerns  
 
-A few resources to get you started if this is your first Flutter project:
+- **Firebase Integration**  
+  - 🔐 Firebase Auth for user authentication  
+  - 📁 Firestore for user data storage  
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **User Flow**  
+  - Sign up/in screens  
+  - Home screen with weather data  
+  - Logout confirmation  
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Screenshots
+
+<!-- Place your designs here - recommended after features section -->
+<!-- Example: -->
+![Login Screen](./design/login.png)  
+*Login screen design*
+
+![SignUp Screen](./design/signup.png)  
+*Login screen design*
+
+![Home Screen](./design/homescreen.png)  
+*Home screen with weather data and logout button*
+
+## Technical Details
+
+- **Backend**: Firebase (Auth + Firestore)  
+- **Architecture**: Clean Architecture pattern  
+- **State Management**: Bloc 
+
+## Setup
+
+1. Clone the repository
+2. Add your Firebase config files
+3. Run `flutter pub get`
+4. Launch with `flutter run`
+
+## Future Improvements
+
+- Add more weather details  
+- Implement user preferences  

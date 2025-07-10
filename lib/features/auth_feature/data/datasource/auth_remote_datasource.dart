@@ -8,9 +8,9 @@ class AuthRemoteDatasource {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   void _addUser(
-      String name , 
-      String pass , 
       String email , 
+      String pass , 
+      String name , 
       String id
     ) async {
     await _firebaseFirestore.collection("users").doc(id).set({
@@ -20,16 +20,41 @@ class AuthRemoteDatasource {
     });
   }
 
-  Future<UserModel> _getUser(String id) async {
-    final snapshot = await _firebaseFirestore
-    .collection("users")
-    .doc(id)
-    .get();
-    
-    return UserModel.fromJson(snapshot.data()!);
-  }
+Future<UserModel> _getUser(String id) async {
 
-  Future<UserModel> signUp(String name , String pass , String email) async {
+    // 1. Verify the user is authenticated
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null || currentUser.uid != id) {
+      throw Exception('Unauthorized: User not authenticated or ID mismatch');
+    }
+
+    // 2. Get user document
+    final snapshot = await _firebaseFirestore
+        .collection("users")
+        .doc(id)
+        .get();
+
+    // 3. Check if document exists
+    if (!snapshot.exists) {
+      throw Exception('User document not found');
+    }
+
+    // 4. Validate data
+    final userData = snapshot.data();
+    if (userData == null) {
+      throw Exception('User data is empty');
+    }
+
+    // 5. Return successfully
+    return UserModel.fromJson({
+      "id":id,
+      "name":userData["name"],
+      "email":userData["email"],
+      "pass":userData["pass"],
+    });
+}
+
+  Future<UserModel> signUp(String email ,String pass , String name) async {
 
     final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
@@ -37,16 +62,16 @@ class AuthRemoteDatasource {
     );
 
     _addUser(
-      name, 
-      pass,
       email, 
+      pass,
+      name,
       userCredential.user!.uid
     );
     return UserModel.fromJson({
-        "id" : userCredential.user!.uid,
         "email" : email,
         "pass" : pass,
         "name" : name,
+        "id" : userCredential.user!.uid,
       });
     }
 
@@ -57,8 +82,8 @@ class AuthRemoteDatasource {
           email: email, 
           password: pass
       );
-
-      return await _getUser(userCredential.user!.uid);
+      final x = await _getUser(userCredential.user!.uid);
+      return x;
 
     }
-  }
+}

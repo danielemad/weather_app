@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/core/utils/themes/dark_theme.dart';
 import 'package:weather_app/features/auth_feature/presentation/bloc/cubit/auth_cubit.dart';
-import 'package:weather_app/features/auth_feature/presentation/screens/auth_screen.dart';
+import 'package:weather_app/features/splash_feature/presentation/screens/splash_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -26,13 +27,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const AuthScreen(),
+      theme: AppDarkTheme.theme,
+      home: SplashScreen()
     );
   }
 }
-
-

@@ -3,7 +3,7 @@ import '../datasource/auth_remote_datasource.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repo.dart';
 
-import '../../../../core/failure.dart';
+import '../../../../core/exceptions/failure.dart';
 
 class AuthRepoImplementation implements AuthRepo{
 
@@ -31,9 +31,12 @@ class AuthRepoImplementation implements AuthRepo{
   @override
   Future<Either<Failure , UserEntity>> signIn(String email, String pass) async {
     try{
-      return Right(await authRemoteDatasource.signIn(email, pass)) ;
+      return Right(
+        await authRemoteDatasource.signIn(email, pass)
+      );
     }
     catch (e){
+      print("failed");
       return Left(
         Failure(e.toString())
       );

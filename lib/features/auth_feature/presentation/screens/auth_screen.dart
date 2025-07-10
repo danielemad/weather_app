@@ -4,8 +4,6 @@ import 'package:weather_app/features/auth_feature/presentation/bloc/cubit/auth_c
 import 'package:weather_app/features/auth_feature/presentation/bloc/states/auth_states.dart';
 import 'package:weather_app/features/auth_feature/presentation/widgets/signin_form.dart';
 import 'package:weather_app/features/auth_feature/presentation/widgets/signup_form.dart';
-import 'package:weather_app/features/home_feature/presentation/screens/home_screen.dart';
-
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -20,7 +18,6 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
       body: Center(
         child: Padding(
           padding:const EdgeInsets.all(24),
@@ -34,7 +31,8 @@ class _AuthScreenState extends State<AuthScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text("WEATHER APP"),
-                  BlocConsumer<AuthCubit , AuthState>(
+                  SizedBox(height:24),
+                  BlocBuilder<AuthCubit , AuthState>(
 
                     builder:(context , state){
                       if(state is AuthLoading){
@@ -56,16 +54,6 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                         ]
                       );
-                    },
-                    listener: (context, state) {
-                      if(state is AuthSuccess){
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context)=> HomeScreen() )
-                        );
-                      }
-                      else if(state is AuthFailure){
-                        
-                      }
                     },
                   )
                 ],

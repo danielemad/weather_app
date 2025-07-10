@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:weather_app/features/auth_feature/presentation/bloc/cubit/auth_cubit.dart";
+import "package:weather_app/shared_components/custom_text_field.dart";
 
 class SignupForm extends StatelessWidget {
 
@@ -20,64 +21,28 @@ class SignupForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TextFormField(
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              hintText: "name",
-              hintStyle: TextStyle(
-                color: Colors.grey
-              ),
-              prefixIcon: Icon(Icons.mail),
-            ),
-            validator: (val){
-              if(val == null || val.isEmpty){
-                return val;
-              }
-              return null;
-            },
+          CustomTextField(
+            icon: Icons.person,
+            hint: "name",
             onSaved: (val) {
-              name = val!;
+              name =  val!.trim();
             },
           ),
           SizedBox(height:20),
-          TextFormField(
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              hintText: "email",
-              hintStyle: TextStyle(
-                color: Colors.grey
-              ),
-              prefixIcon: Icon(Icons.mail),
-            ),
-            validator: (val){
-              if(val == null || val.isEmpty){
-                return val;
-              }
-              return null;
-            },
+          CustomTextField(
+            icon: Icons.mail,
+            hint: "email",
             onSaved: (val) {
-              email = val!;
+              email =  val!.trim();
             },
           ),
           SizedBox(height:20),
-          TextFormField(
-            textInputAction: TextInputAction.done,
+          CustomTextField(
+            icon: Icons.lock,
+            hint: "password",
             obscureText: true,
-            decoration: InputDecoration(
-              hintText: "password",
-              hintStyle: TextStyle(
-                color: Colors.grey
-              ),
-              prefixIcon: Icon(Icons.lock),
-            ),
-            validator: (val){
-              if(val == null || val.isEmpty){
-                return val;
-              }
-              return null ;
-            },
             onSaved: (val) {
-              pass = val!;
+              pass = val!.trim();
             },
           ),
           SizedBox(height:20),
