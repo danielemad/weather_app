@@ -36,7 +36,6 @@ class AuthRepoImplementation implements AuthRepo{
       );
     }
     catch (e){
-      print("failed");
       return Left(
         Failure(e.toString())
       );
