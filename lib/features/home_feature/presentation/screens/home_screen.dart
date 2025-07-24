@@ -1,27 +1,44 @@
-import "package:firebase_auth/firebase_auth.dart";
-import "package:flutter/material.dart";
-
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubits/home_cubit/home_cubit.dart';
+import '../cubits/home_cubit/home_states.dart';
+import '../widgets/forecastday_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home Screen"),
-        actions: [
-          IconButton(
-            onPressed: (){
-              FirebaseAuth.instance.signOut();
-            }, 
-            icon: Icon(Icons.logout)
-          )
-        ],
+        title: const Text("Home Screen"),
       ),
-      body: Center(
-        child: Text("this is home screen"),
+      body: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          if (state is HomeSuccess) {
+            final forecastdays = state.forecastEntity.forecastdays;
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ForecastdayWidget(
+                    firstDate: DateTime.now(),
+                    forecastdays: forecastdays,
+                    location:state.forecastEntity.location,
+                  ),
+                ],
+              ),
+            );
+          } else if (state is HomeFailure) {
+            return Center(
+              child: Text(state.f.err),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }
