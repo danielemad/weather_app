@@ -1,9 +1,8 @@
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:weather_app/features/auth_feature/data/datasource/auth_remote_datasource.dart";
-import "package:weather_app/features/auth_feature/data/repositories/auth_repo_implementation.dart";
-
-import "package:weather_app/features/auth_feature/domain/usecases/user_login.dart";
-import "package:weather_app/features/auth_feature/domain/usecases/user_signup.dart";
+import "../../../../../core/injections.dart";
+import "../../../domain/repositories/auth_repo.dart";
+import "../../../domain/usecases/user_login.dart";
+import "../../../domain/usecases/user_signup.dart";
 import "../states/auth_states.dart";
 
 class AuthCubit extends Cubit<AuthState> {
@@ -19,9 +18,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
 
     final eitherFailureOrUser = await UserSignup(
-      AuthRepoImplementation(
-        AuthRemoteDatasource()
-      )
+      sl<AuthRepo>()
     ).call(userEmail , userPass , name);
 
     eitherFailureOrUser.fold(
@@ -39,9 +36,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
 
     final eitherFailureOrUser = await UserLogin(
-      AuthRepoImplementation(
-        AuthRemoteDatasource()
-      )
+      sl<AuthRepo>()
     ).call(userEmail , userPass);
 
     eitherFailureOrUser.fold(

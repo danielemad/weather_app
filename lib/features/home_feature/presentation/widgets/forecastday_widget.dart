@@ -1,9 +1,13 @@
 import "package:flutter/material.dart";
 import 'package:easy_date_timeline/easy_date_timeline.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:weather_app/features/ai_feature/presentation/widgets/prediction_result.dart';
 import 'package:weather_app/features/home_feature/domain/entities/location_entity.dart';
 
+import '../../../ai_feature/presentation/cubits/prediction_cubit.dart';
+import '../../../ai_feature/presentation/cubits/prediction_states.dart';
 import '../../domain/entities/forecastday_entity.dart';
 
 class ForecastdayWidget extends StatefulWidget {
@@ -35,6 +39,14 @@ class _ForecastdayWidgetState extends State<ForecastdayWidget> {
     selectedDate = firstDate;
     formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
     forecastday = widget.forecastdays[formattedDate]!;
+
+    BlocProvider.of<PredictionCubit>(context).predict([
+      forecastday.minTempInC < 15 ? 1 : 0,// is rainy
+      forecastday.minTempInC >= 35 ? 1 : 0,// is sunny
+      forecastday.minTempInC >= 35 ? 1 : 0,// is hot
+      forecastday.minTempInC < 25 ? 1 : 0,// is meld
+      forecastday.avghumidity < 70 ? 1 : 0 // is humidity normal
+    ]);
   }
 
   @override
@@ -114,7 +126,7 @@ class _ForecastdayWidgetState extends State<ForecastdayWidget> {
               CircularPercentIndicator(
                 radius: 40,
                 lineWidth: 10.0,
-                percent: forecastday.maxWindInMph * 1/10,
+                percent: (forecastday.maxWindInMph * 1/100).clamp(0, 1),
                 center: Icon(Icons.air),
                 footer: const Column(
                   children: [
@@ -134,7 +146,7 @@ class _ForecastdayWidgetState extends State<ForecastdayWidget> {
               CircularPercentIndicator(
                 radius: 40,
                 lineWidth: 10.0,
-                percent: forecastday.maxWindInMph * 1/10,
+                percent: (forecastday.avghumidity * 1/100).clamp(0, 1),
                 center: Icon(Icons.water_drop),
                 footer: const Column(
                   children: [
@@ -152,6 +164,22 @@ class _ForecastdayWidgetState extends State<ForecastdayWidget> {
                 progressColor: Colors.blue,
               ),
             ],
+          ),
+          const SizedBox(height: 24,),
+          BlocBuilder<PredictionCubit , PredictionStates>(
+            builder: (context , state){
+              if (state is PredctionFailure){
+                return PredictionResult(text: state.failure.err);
+              }
+              else if(state is PredctionSuccess){
+                return PredictionResult(text: state.prediction.text);
+
+              } 
+              else{
+                return CircularProgressIndicator();
+              }
+
+            }
           )
         ],
       ),
@@ -214,6 +242,13 @@ class _ForecastdayWidgetState extends State<ForecastdayWidget> {
             selectedDate = date;
             formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
             forecastday = widget.forecastdays[formattedDate]!;
+            BlocProvider.of<PredictionCubit>(context).predict([
+              forecastday.minTempInC < 15 ? 1 : 0,// is rainy
+              forecastday.minTempInC >= 35 ? 1 : 0,// is sunny
+              forecastday.minTempInC >= 35 ? 1 : 0,// is hot
+              forecastday.minTempInC < 25 ? 1 : 0,// is meld
+              forecastday.avghumidity < 70 ? 1 : 0 // is humidity normal
+            ]);
           });
         },
       ),
