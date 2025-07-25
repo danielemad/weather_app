@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_app/core/utils/themes/dark_theme.dart';
-import 'package:weather_app/features/auth_feature/presentation/bloc/cubit/auth_cubit.dart';
-import 'package:weather_app/features/home_feature/presentation/cubits/home_cubit/home_cubit.dart';
-import 'package:weather_app/features/splash_feature/presentation/screens/splash_screen.dart';
+
+import 'core/injections.dart';
+import 'core/utils/themes/dark_theme.dart';
+import 'features/ai_feature/presentation/cubits/prediction_cubit.dart';
+import 'features/auth_feature/presentation/bloc/cubit/auth_cubit.dart';
+import 'features/home_feature/presentation/cubits/home_cubit/home_cubit.dart';
+import 'features/splash_feature/presentation/screens/splash_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -20,6 +23,8 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  init();
+
   runApp(
     MultiBlocProvider(
       providers: [
@@ -28,6 +33,9 @@ void main() async {
         ),
         BlocProvider<AuthCubit>(
           create: (_) => AuthCubit(),
+        ),
+        BlocProvider<PredictionCubit>(
+          create: (_) => PredictionCubit(),
         ),
       ],
       child: MyApp(), // or any widget that needs these blocs

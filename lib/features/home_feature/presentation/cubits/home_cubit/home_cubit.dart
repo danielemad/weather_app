@@ -1,5 +1,5 @@
 import "../../../../../core/exceptions/failure.dart";
-import "../../../data/datasources/remote_datasource.dart";
+import "../../../../../core/injections.dart";
 import "../../../data/repos/home_repo_impl.dart";
 import "../../../domain/usecases/get_weather_forecast_for_a_week.dart";
 import "home_states.dart";
@@ -11,7 +11,9 @@ class HomeCubit extends Cubit<HomeState> {
     getWeatherForecastForAWeek();
   }
   final _weatherForecast =
-      GetWeatherForecastForAWeek(repo: HomeRepoImpl(RemoteDataSource()));
+      GetWeatherForecastForAWeek(
+        repo:sl<HomeRepoImpl>()
+      );
 
   /// Determine the current position of the device.
   ///
